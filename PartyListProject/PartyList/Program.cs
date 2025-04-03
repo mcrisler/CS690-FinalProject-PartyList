@@ -58,5 +58,12 @@ class Program
             } while(command!= "2");
             
         }
+
+        if (mode=="3"){
+            Console.Write("Enter guest first and last name: ");
+            string edit_guest = Console.ReadLine();
+
+            var lines = File.ReadAllLines("party-list-data.txt");
+        }
     }
 }
