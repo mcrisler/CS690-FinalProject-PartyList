@@ -6,6 +6,8 @@
 # dotenv files
 .env
 
+party-list-data.txt
+
 # User-specific files
 *.rsuser
 *.suo
