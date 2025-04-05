@@ -23,12 +23,13 @@ class Program
 
         string no_response = "---";
 
-        string mode = AskForInput("\nPlease enter one of the following options (1 or 2): \n1. Add New Guest\n2. Edit Current Guest\n3. Remove Guest\n4. Exit Program\nOption Selection: ");
+        string mode = AskForInput("\nPlease enter one of the following options (1-4): \n1. Add New Guest\n2. Edit Current Guest\n3. Remove Guest\n4. Exit Program\nOption Selection: ");
 
         if(mode=="1"){
 
             string guest_name = AskForInput("\nEnter guest first and last name: ");
             if (string.IsNullOrWhiteSpace(guest_name)) guest_name = no_response;
+            guest_name = string.Join(" ", guest_name.Split(' ').Select(word => char.ToUpper(word[0]) + word.Substring(1).ToLower()));
 
             string dp_status = "";
             string plus_one_status = "";
@@ -160,7 +161,7 @@ class Program
             }
 
             else if (mode == "4") {
-                Console.WriteLine("\nProgram Ended\n");
+                Console.WriteLine("\nParty List Closed\n");
                 break;
             } 
             else {
