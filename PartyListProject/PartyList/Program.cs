@@ -35,15 +35,32 @@ class Program
             string plus_one_status = "";
 
             string rsvp_status = AskForInput("Enter guest RSVP status (yes or no): ");
-            if (rsvp_status == "yes") {
+            if (rsvp_status == "yes" || rsvp_status == "Yes" || rsvp_status == "YES") {
+
+                rsvp_status = "yes";
             
                 dp_status = AskForInput("Enter guest dietary preference (Leave blank if none): ");
-                if (string.IsNullOrWhiteSpace(dp_status)) dp_status = no_response;
+                dp_status = dp_status.ToLower();
+
+                }
+                else {
+
+                    dp_status = no_response;
+
+                } 
+                
 
                 plus_one_status = AskForInput("Enter guest plus-one status (yes or no): ");
                 if (string.IsNullOrWhiteSpace(plus_one_status)) plus_one_status = no_response;
 
-            } 
+                if (plus_one_status == "yes" || plus_one_status == "Yes" || plus_one_status == "YES") {
+                    plus_one_status = "yes";
+                }
+                if (plus_one_status == "no" || plus_one_status == "No" || plus_one_status == "NO") {
+                    plus_one_status = "no";
+                }
+
+             
             
             if (string.IsNullOrWhiteSpace(rsvp_status)) {
 
@@ -53,7 +70,7 @@ class Program
 
             } 
 
-            if (rsvp_status == "no") {
+            if (rsvp_status == "no" || rsvp_status == "No" || rsvp_status == "NO") {
 
                 rsvp_status = "no";
                 dp_status = no_response;
@@ -77,6 +94,7 @@ class Program
             while (guest_name_recognized == false){
 
                 string edit_guest = AskForInput("Enter guest first and last name: ");
+                edit_guest = string.Join(" ", edit_guest.Split(' ').Select(word => char.ToUpper(word[0]) + word.Substring(1).ToLower()));
 
                 string[] lines = File.ReadAllLines("party-list-data.txt");
                 bool guest_in_list = false;
@@ -96,10 +114,12 @@ class Program
                     if (update_rsvp == "yes") {
 
                         string update_dp = AskForInput("Update Dietary Preference: ");
+                        update_dp = update_dp.ToLower();
                         if (string.IsNullOrWhiteSpace(update_dp)) update_dp = no_response;
                         list_items[2] = update_dp;
 
                         string update_plusone = AskForInput("Update Plus-One Status (yes or no): ");
+                        update_plusone = update_plusone.ToLower();
                         if (string.IsNullOrWhiteSpace(update_plusone)) update_plusone = no_response;
                         list_items[3] = update_plusone;
 
@@ -137,6 +157,7 @@ class Program
             if (mode == "3"){
 
                 string remove_guest = AskForInput("Enter the first and last name of the guest you would like to remove from the party list: ");
+                remove_guest = string.Join(" ", remove_guest.Split(' ').Select(word => char.ToUpper(word[0]) + word.Substring(1).ToLower()));
                 string[] list_rows = File.ReadAllLines(party_list_file);
                 bool guest_name_recognized = false;
 
