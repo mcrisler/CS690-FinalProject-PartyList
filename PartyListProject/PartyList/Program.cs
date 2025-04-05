@@ -23,7 +23,7 @@ class Program
 
         string no_response = "---";
 
-        string mode = AskForInput("\nPlease enter one of the following options (1 or 2): \n1. Add New Guest\n2. Edit Current Guest\n3. Exit Program\nOption Selection: ");
+        string mode = AskForInput("\nPlease enter one of the following options (1 or 2): \n1. Add New Guest\n2. Edit Current Guest\n3. Remove Guest\n4. Exit Program\nOption Selection: ");
 
         if(mode=="1"){
 
@@ -133,7 +133,33 @@ class Program
                     }
 
                 }
-            else if (mode == "3") {
+            if (mode == "3"){
+
+                string remove_guest = AskForInput("Enter the first and last name of the guest you would like to remove from the party list: ");
+                string[] list_rows = File.ReadAllLines(party_list_file);
+                bool guest_name_recognized = false;
+
+                var guest_removed_list = new System.Collections.Generic.List<string>();
+
+                foreach (var row in list_rows) {
+                    string[] guest_names = Regex.Split(row, @"\s{4,}");
+                    if (guest_names[0].Trim() == remove_guest) {
+                        guest_name_recognized = true;
+                    }
+                    else{
+                        guest_removed_list.Add(row);
+                    }
+                }
+                
+                    File.WriteAllLines(party_list_file, guest_removed_list);
+                    Console.WriteLine("Guest removed from party list");
+
+                
+
+
+            }
+
+            else if (mode == "4") {
                 Console.WriteLine("\nProgram Ended\n");
                 break;
             } 
