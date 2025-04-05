@@ -11,10 +11,10 @@ class Program
 
          while(true) {
 
-               
+             
          var party_list = File.ReadLines("party-list-data.txt");
          Console.Clear();
-
+ 
             foreach (var row in party_list){
                 Console.WriteLine(row);
             }
@@ -42,14 +42,6 @@ class Program
                 dp_status = AskForInput("Enter guest dietary preference (Leave blank if none): ");
                 dp_status = dp_status.ToLower();
 
-                }
-                else {
-
-                    dp_status = no_response;
-
-                } 
-                
-
                 plus_one_status = AskForInput("Enter guest plus-one status (yes or no): ");
                 if (string.IsNullOrWhiteSpace(plus_one_status)) plus_one_status = no_response;
 
@@ -60,7 +52,15 @@ class Program
                     plus_one_status = "no";
                 }
 
-             
+                }
+                else {
+
+                    dp_status = no_response;
+                    plus_one_status = no_response;
+
+                } 
+                
+ 
             
             if (string.IsNullOrWhiteSpace(rsvp_status)) {
 
@@ -140,9 +140,8 @@ class Program
 
                     guest_name_recognized = true;
 
-                    foreach (var row in party_list){
-                    Console.WriteLine(row);
-                        }
+
+                        
                     }
                 }
 
@@ -182,6 +181,7 @@ class Program
             }
 
             else if (mode == "4") {
+                Console.Clear();
                 Console.WriteLine("\nParty List Closed\n");
                 break;
             } 
