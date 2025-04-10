@@ -1,7 +1,10 @@
 ﻿namespace PartyList;
+
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
 class Program
 {
@@ -23,27 +26,39 @@ class Program
 
         string no_response = "---";
 
-        string mode = AskForInput("\nPlease enter one of the following options (1-4): \n1. Add New Guest\n2. Edit Current Guest\n3. Remove Guest\n4. Exit Program\nOption Selection: ");
+        var mode = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Please select mode").AddChoices(new[]{"Add New Guest","Edit Guest","Remove Guest","EXIT"}));
 
-        if(mode=="1"){
 
-            string guest_name = AskForInput("\nEnter guest first and last name: ");
+
+
+
+
+
+
+
+
+        if(mode=="Add New Guest"){
+
+            string command;
+
+            do{
+                string guest_name = AskForInput("\nEnter guest first and last name: ");
             if (string.IsNullOrWhiteSpace(guest_name)) guest_name = no_response;
             guest_name = string.Join(" ", guest_name.Split(' ').Select(word => char.ToUpper(word[0]) + word.Substring(1).ToLower()));
 
             string dp_status = "";
             string plus_one_status = "";
 
-            string rsvp_status = AskForInput("Enter guest RSVP status (yes or no): ");
+            string rsvp_status = AskForInput("\nEnter guest RSVP status (yes or no): ");
             if (rsvp_status == "yes" || rsvp_status == "Yes" || rsvp_status == "YES") {
 
                 rsvp_status = "yes";
             
-                dp_status = AskForInput("Enter guest dietary preference (Leave blank if none): ");
+                dp_status = AskForInput("\nEnter guest dietary preference (Leave blank if none): ");
                 if (string.IsNullOrWhiteSpace(dp_status)) dp_status = no_response;
                 dp_status = dp_status.ToLower();
 
-                plus_one_status = AskForInput("Enter guest plus-one status (yes or no): ");
+                plus_one_status = AskForInput("\nEnter guest plus-one status (yes or no): ");
                 if (string.IsNullOrWhiteSpace(plus_one_status)) plus_one_status = no_response;
 
                 if (plus_one_status == "yes" || plus_one_status == "Yes" || plus_one_status == "YES") {
@@ -55,6 +70,7 @@ class Program
 
             }
             
+
             if (string.IsNullOrWhiteSpace(rsvp_status)) {
 
                 rsvp_status = no_response;
@@ -62,6 +78,7 @@ class Program
                 plus_one_status = no_response;
 
             } 
+
 
             if (rsvp_status == "no" || rsvp_status == "No" || rsvp_status == "NO") {
 
@@ -72,21 +89,47 @@ class Program
             } 
             
 
-
-
             string row = string.Format("{0,-24} {1,-13} {2,-13} {3,-13}", guest_name, rsvp_status, dp_status, plus_one_status);
 
             File.AppendAllText("party-list-data.txt", row +Environment.NewLine);
+
+            Console.WriteLine($"\n* {guest_name} will be added to party list *\n");
+
+            command = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Please make a selection to continue:").AddChoices(new[]{"Add Another Guest","DONE"}));
+            
+
+            } while (command!="DONE");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             
         }
 
-        if (mode=="2"){
+        if (mode=="Edit Guest"){
 
-            bool guest_name_recognized = false;
+            string command;
 
-            while (guest_name_recognized == false){
+            do{
+            
+            Console.WriteLine("\nEDIT GUEST");
 
-                string edit_guest = AskForInput("Enter guest first and last name: ");
+            bool guest_name_not_recognized = false;
+
+            while (guest_name_not_recognized == false){
+
+                string edit_guest = AskForInput("\nEnter guest first and last name: ");
                 edit_guest = string.Join(" ", edit_guest.Split(' ').Select(word => char.ToUpper(word[0]) + word.Substring(1).ToLower()));
 
                 string[] lines = File.ReadAllLines("party-list-data.txt");
@@ -100,58 +143,78 @@ class Program
                     guest_in_list = true;
                     Console.WriteLine($"\nGuest Information \nGuest Name: {list_items[0]}\nRSVP Status: {list_items[1]}\nDietary Preference: {list_items[2]}\nPlus-One: {list_items[3]}\n");
 
-                    string update_rsvp = AskForInput("Update RSVP Status (yes or no): ");
+                    string update_rsvp = AskForInput("\nRSVP Status (yes or no): ");
                     if (string.IsNullOrWhiteSpace(update_rsvp)) update_rsvp = no_response;
                     list_items[1] = update_rsvp;
 
                     if (update_rsvp == "yes") {
 
-                        string update_dp = AskForInput("Update Dietary Preference: ");
+                        string update_dp = AskForInput("\nDietary Preference: ");
                         update_dp = update_dp.ToLower();
                         if (string.IsNullOrWhiteSpace(update_dp)) update_dp = no_response;
                         list_items[2] = update_dp;
 
-                        string update_plusone = AskForInput("Update Plus-One Status (yes or no): ");
+                        string update_plusone = AskForInput("\nPlus-One Status (yes or no): ");
                         update_plusone = update_plusone.ToLower();
                         if (string.IsNullOrWhiteSpace(update_plusone)) update_plusone = no_response;
                         list_items[3] = update_plusone;
 
                     }
+
                     if (update_rsvp == "no" || update_rsvp == "---") {
 
                         list_items[2] = no_response;
                         list_items[3] = no_response;
 
                     }
-
                     
-
                     lines[i] = string.Format("{0,-24} {1,-13} {2,-13} {3,-13}", edit_guest, list_items[1], list_items[2], list_items[3]);
 
                     File.WriteAllLines("party-list-data.txt", lines);
-                    Console.WriteLine("Guest Information Updated");
+                    Console.WriteLine($"\n* {edit_guest}'s information will be updated *\n");
 
-                    guest_name_recognized = true;
-
-
+                    guest_name_not_recognized = true;
                         
                     }
                 }
 
             if(guest_in_list == false){
 
-                Console.WriteLine("\nGuest not found in system. Try Again.");
+                Console.WriteLine($"\n{edit_guest} not found in system. Try Again.");
                 
                         }
                     }
 
-                }
-            if (mode == "3"){
+                    command = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Please make a selection to continue:").AddChoices(new[]{"Edit Another Guest","DONE"}));
 
-                string remove_guest = AskForInput("Enter the first and last name of the guest you would like to remove from the party list: ");
+                    } while(command!="DONE");
+                }
+
+
+
+
+
+
+
+
+
+
+
+            if (mode == "Remove Guest"){
+
+                string command;
+
+                do{
+
+                Console.WriteLine("REMOVE GUEST");
+                bool guest_name_recognized = false;
+
+                while(!guest_name_recognized){
+
+                    string remove_guest = AskForInput("\nEnter guest first and last name:");
                 remove_guest = string.Join(" ", remove_guest.Split(' ').Select(word => char.ToUpper(word[0]) + word.Substring(1).ToLower()));
                 string[] list_rows = File.ReadAllLines(party_list_file);
-                bool guest_name_recognized = false;
+                
 
                 var guest_removed_list = new System.Collections.Generic.List<string>();
 
@@ -164,32 +227,57 @@ class Program
                         guest_removed_list.Add(row);
                     }
                 }
-                
+
+                if(guest_name_recognized){
+
                     File.WriteAllLines(party_list_file, guest_removed_list);
-                    Console.WriteLine("Guest removed from party list");
+                    Console.WriteLine($"\n* {remove_guest} will be removed from party list *\n");
+                } else {
+                    Console.WriteLine($"{remove_guest} not found in party list. Please try again.");
+                }
 
-                
+                }
+            
+                command = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Please make a selection to continue:").AddChoices(new[]{"Remove Another Guest","DONE"}));
 
-
+                } while(command!="DONE");
             }
 
-            else if (mode == "4") {
+
+
+
+
+
+
+
+
+
+            else if (mode == "EXIT") {
                 Console.Clear();
                 Console.WriteLine("\nParty List Closed\n");
                 break;
             } 
-            else {
-                Console.WriteLine("\n Not a valid selection. Please enter numbers 1-3.");
-            }
             }
 
-            
+        
     }
+
+
+
+
+
+
+
 
     public static string AskForInput(string message) {
         Console.WriteLine(message);
         return Console.ReadLine();
     }
+
+
+
+
+
 
     public static int ConfirmedGuestCount(string filePath){
 
@@ -209,11 +297,10 @@ class Program
                 }
                 if (list_columns[3].Trim() == "yes") {
                     guest_count++;
-                }
-
-                
+                } 
             }
         }
+
         return guest_count;
     }
 }
