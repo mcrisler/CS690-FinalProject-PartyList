@@ -11,7 +11,7 @@ class Program
 
          while(true) {
 
-             
+        
          var party_list = File.ReadLines("party-list-data.txt");
          Console.Clear();
  
