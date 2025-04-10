@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-class Program
+public class Program
 {
     static void Main(string[] args)
     {    
@@ -288,7 +288,7 @@ class Program
         foreach (var row in list_rows){
 
             string[] list_columns = Regex.Split(row, @"\s{4,}");
-            if (list_columns.Length >= 3) {
+            if (list_columns.Length >= 4) {
 
                 if (list_columns[1].Trim() == "yes") {
 
