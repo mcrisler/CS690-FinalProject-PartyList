@@ -1,2 +1,2 @@
-# CS690-FinalProject-PartyList
-This project is completed by Mason Crisler
+# Final Project for CS690
+This project was completed by Mason Crisler
