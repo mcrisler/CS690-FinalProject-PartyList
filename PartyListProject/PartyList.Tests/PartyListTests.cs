@@ -12,7 +12,7 @@ public class PartyListTests
     public PartyListTests() {
         
         testFileName = "test-party-list-data.txt";
-        File.WriteAllText(testFileName,"James Harden    yes     vegan    no");
+        File.WriteAllText(testFileName,"James Harden    yes     vegan    yes\nEric Gordon   yes    none    no\nGerald Green    no     no    no\nClint Capela    yes     non-diary    yes");
 
     }
 
@@ -20,7 +20,7 @@ public class PartyListTests
     public void Test_ConfirmedGuestCount()
     {
         int result = PartyList.Program.ConfirmedGuestCount(testFileName);
-        Assert.Equal(1, result);
+        Assert.Equal(5, result);
 
     }
 }

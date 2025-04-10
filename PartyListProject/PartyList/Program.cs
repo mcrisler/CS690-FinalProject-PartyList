@@ -23,10 +23,11 @@ public class Program
             }
             int confirmed_guest_rsvp = ConfirmedGuestCount(party_list_file);
             Console.WriteLine($"\nConfirmed Guest Count: {confirmed_guest_rsvp}");
+            Console.WriteLine("_____________________________________________________________");
 
         string no_response = "---";
 
-        var mode = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Please select mode").AddChoices(new[]{"Add New Guest","Edit Guest","Remove Guest","EXIT"}));
+        var mode = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("\nPlease select mode:").AddChoices(new[]{"Add New Guest","Edit Guest","Remove Guest","EXIT"}));
 
 
 
@@ -83,8 +84,8 @@ public class Program
             if (rsvp_status == "no" || rsvp_status == "No" || rsvp_status == "NO") {
 
                 rsvp_status = "no";
-                dp_status = no_response;
-                plus_one_status = no_response;
+                dp_status = "no";
+                plus_one_status = "no";
 
             } 
             
@@ -161,11 +162,15 @@ public class Program
 
                     }
 
-                    if (update_rsvp == "no" || update_rsvp == "---") {
+                    if (update_rsvp == "no"|| update_rsvp == "No" || update_rsvp == "NO") {
 
+                        list_items[2] = "no";
+                        list_items[3] = "no";
+
+                    }
+                    if (update_rsvp == "---"){
                         list_items[2] = no_response;
                         list_items[3] = no_response;
-
                     }
                     
                     lines[i] = string.Format("{0,-24} {1,-13} {2,-13} {3,-13}", edit_guest, list_items[1], list_items[2], list_items[3]);
@@ -287,7 +292,7 @@ public class Program
 
         foreach (var row in list_rows){
 
-            string[] list_columns = Regex.Split(row, @"\s{4,}");
+            string[] list_columns = Regex.Split(row, @"\s{2,}");
             if (list_columns.Length >= 4) {
 
                 if (list_columns[1].Trim() == "yes") {
