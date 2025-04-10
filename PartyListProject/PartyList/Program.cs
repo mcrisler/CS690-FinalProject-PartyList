@@ -40,6 +40,7 @@ class Program
                 rsvp_status = "yes";
             
                 dp_status = AskForInput("Enter guest dietary preference (Leave blank if none): ");
+                if (string.IsNullOrWhiteSpace(dp_status)) dp_status = no_response;
                 dp_status = dp_status.ToLower();
 
                 plus_one_status = AskForInput("Enter guest plus-one status (yes or no): ");
@@ -52,15 +53,7 @@ class Program
                     plus_one_status = "no";
                 }
 
-                }
-                else {
-
-                    dp_status = no_response;
-                    plus_one_status = no_response;
-
-                } 
-                
- 
+            }
             
             if (string.IsNullOrWhiteSpace(rsvp_status)) {
 
